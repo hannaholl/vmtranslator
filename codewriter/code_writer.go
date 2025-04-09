@@ -15,32 +15,39 @@ import (
 
 type AssemblyCode string
 
-func WritePop(command parser.Command) string {
+func WritePush(command parser.Command) string {
 	/*
 		// push constant 10
 		@10
 		D=A
+
 		@SP
 		A=M
 		M=D
+
 		@SP
 		M=M+1
 	*/
+
 	var assemblyCode AssemblyCode = ""
 
 	// Could write directly to the file instead of a variable?
 
-	if command.Arg1 == "constant" {
-		// This line depends on constant, local, maybe other things?
+	switch command.Arg1 {
+	case "constant":
 		assemblyCode.WriteLine("@" + strconv.Itoa(command.Arg2))
+		assemblyCode.WriteLine("D=A") // Set D to Arg2
+	case "local":
+		assemblyCode.WriteLine("@LCL")
+		assemblyCode.WriteLine("D=M")                            // D is the base of local vars
+		assemblyCode.WriteLine("@" + strconv.Itoa(command.Arg2)) // index from command
+		assemblyCode.WriteLine("A=D+A")                          // load the local address from the command
+		assemblyCode.WriteLine("D=M")                            // set D to the local value
 	}
 
-	// Set D to Arg2
-	assemblyCode.WriteLine("D=A")
-
 	// Add Arg2 (D) to stack
-	assemblyCode.WriteLine("@SP") // SP stores to a memory location
-	assemblyCode.WriteLine("A=M") // A points to the memory location of SP
+	assemblyCode.WriteLine("@SP") // SP stores a memory location
+	assemblyCode.WriteLine("A=M") // A points to the memory location from SP
 	assemblyCode.WriteLine("M=D") // Set the current memory location (A) to D
 
 	// Increment stack pointer

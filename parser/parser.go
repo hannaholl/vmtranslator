@@ -15,11 +15,14 @@ const (
 
 type Command struct {
 	CommandType CommandType
-	Arg1        string
-	Arg2        int
+	// Should arguments be typed better, and/or depending on the command type?
+	// Arg1 string can only be certains strings, Arg2 is only defined for push/pop
+	Arg1 string
+	Arg2 int
 }
 
-func ParseLine(line string) (Command, bool) {
+// Use named returns because it wasn't clear what the bool was for otherwise
+func ParseLine(line string) (command Command, isValid bool) {
 	// comments and empty lines are ignored
 	if strings.HasPrefix(line, "//") || line == "" {
 		return Command{}, false

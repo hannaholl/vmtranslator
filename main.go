@@ -38,13 +38,14 @@ func main() {
 			newFile.WriteString("// VM line: " + line)
 
 			if parsedLine.CommandType == parser.PUSH_COMMAND {
-				code := codewriter.WritePop((parsedLine))
+				code := codewriter.WritePush((parsedLine))
 				newFile.WriteString(code)
 			}
 
 			fmt.Println(parsedLine)
 		}
-
 	}
 
+	// End with intifite loop
+	newFile.WriteString("(END)\n@END\n0;JMP")
 }
