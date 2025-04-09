@@ -5,4 +5,7 @@
 // set that 3010,     // base address of the that segment
 
 
-push local 10
+push constant 10
+push constant 2
+push constant 200
+pop local 2

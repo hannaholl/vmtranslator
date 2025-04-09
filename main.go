@@ -35,17 +35,23 @@ func main() {
 
 		if parsedLine, isValid := parser.ParseLine(line); isValid {
 			// Write the line as a comment to explain what the following instructions do
-			newFile.WriteString("// VM line: " + line)
+			newFile.WriteString("\n// VM line: " + line)
 
+			code := ""
 			if parsedLine.CommandType == parser.PUSH_COMMAND {
-				code := codewriter.WritePush((parsedLine))
-				newFile.WriteString(code)
+				code = codewriter.WritePush((parsedLine))
+
 			}
 
+			if parsedLine.CommandType == parser.POP_COMMAND {
+				code = codewriter.WritePop((parsedLine))
+			}
+
+			newFile.WriteString(code)
 			fmt.Println(parsedLine)
 		}
 	}
 
 	// End with intifite loop
-	newFile.WriteString("(END)\n@END\n0;JMP")
+	newFile.WriteString("\n(END)\n@END\n0;JMP")
 }
