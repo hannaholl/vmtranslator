@@ -13,20 +13,20 @@ const (
 	POP_COMMAND  CommandType = 2
 )
 
-type parsedLine struct {
+type Command struct {
 	CommandType CommandType
 	Arg1        string
 	Arg2        int
 }
 
-func ParseLine(line string) (parsedLine, bool) {
+func ParseLine(line string) (Command, bool) {
 	// comments and empty lines are ignored
 	if strings.HasPrefix(line, "//") || line == "" {
-		return parsedLine{}, false
+		return Command{}, false
 	}
 
 	commandType := getCommandType(line)
-	finalLine := parsedLine{
+	finalLine := Command{
 		CommandType: commandType,
 		Arg1:        getArg1(line),
 	}
@@ -34,7 +34,7 @@ func ParseLine(line string) (parsedLine, bool) {
 	if commandType != ARIT_COMMAND {
 		arg2, err := getArg2(line)
 		if err != nil {
-			return parsedLine{}, false
+			return Command{}, false
 		}
 		finalLine.Arg2 = arg2
 	}
@@ -68,11 +68,3 @@ func getArg2(line string) (int, error) {
 
 	return arg2, nil
 }
-
-// Maybe to translate commands to assembly
-// switch commandType {
-// case POP_COMMAND:
-// 	return "pop", nil
-// }
-
-// return "parsedLine{commandType: getCommandType(line)}", errors.New("invalid command type")

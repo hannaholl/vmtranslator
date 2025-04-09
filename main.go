@@ -6,6 +6,7 @@ import (
 	"os"
 	"strings"
 
+	"nandtotetris/vmtranslator/codewriter"
 	"nandtotetris/vmtranslator/parser"
 )
 
@@ -33,18 +34,15 @@ func main() {
 		line := scanner.Text()
 
 		if parsedLine, isValid := parser.ParseLine(line); isValid {
-			// Turn parsed line into assembly code
+			// Write the line as a comment to explain what the following instructions do
+			newFile.WriteString("// VM line: " + line)
 
-			assemblyCode := parsedLine
+			if parsedLine.CommandType == parser.PUSH_COMMAND {
+				code := codewriter.WritePop((parsedLine))
+				newFile.WriteString(code)
+			}
 
-			// if (command is aritmethic) {
-			// assemblyCode := writer.writeArithmetic(parsedLine)
-			// }
-
-			// Write assembly code to new file
-			// newFile.WriteString(assemblyCode.CommandType)
-
-			fmt.Println(assemblyCode)
+			fmt.Println(parsedLine)
 		}
 
 	}
