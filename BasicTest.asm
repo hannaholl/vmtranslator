@@ -1,29 +1,4 @@
 
-@256
-D=A
-@SP
-M=D
-
-@300
-D=A
-@LCL
-M=D
-
-@400
-D=A
-@ARG
-M=D
-
-@3000
-D=A
-@THIS
-M=D
-
-@3010
-D=A
-@THAT
-M=D
-
 // VM line: push constant 10
 @10
 D=A
@@ -282,6 +257,7 @@ AM=M-1
 D=M
 A=A-1
 M=D+M
+
 // VM line: push argument 1
 @ARG
 D=M
@@ -299,7 +275,8 @@ M=M+1
 AM=M-1
 D=M
 A=A-1
-M=D-M
+M=M-D
+
 // VM line: push this 6
 @THIS
 D=M
@@ -330,12 +307,14 @@ AM=M-1
 D=M
 A=A-1
 M=D+M
+
 // VM line: sub
 @SP
 AM=M-1
 D=M
 A=A-1
-M=D-M
+M=M-D
+
 // VM line: push temp 6
 @11
 D=M
@@ -351,6 +330,7 @@ AM=M-1
 D=M
 A=A-1
 M=D+M
+
 (END)
 @END
 0;JMP

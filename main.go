@@ -28,6 +28,15 @@ func main() {
 	}
 	defer newFile.Close()
 
+	// Init symbols
+	// These are initialised by a test script in the cpu emulator and
+	// won't be needed in future chapters
+	newFile.WriteString(codewriter.WriteVariable("SP", 256))
+	newFile.WriteString(codewriter.WriteVariable("LCL", 300))
+	newFile.WriteString(codewriter.WriteVariable("ARG", 400))
+	newFile.WriteString(codewriter.WriteVariable("THIS", 3000))
+	newFile.WriteString(codewriter.WriteVariable("THAT", 3010))
+
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
@@ -40,15 +49,18 @@ func main() {
 			code := ""
 			if parsedLine.CommandType == parser.PUSH_COMMAND {
 				code = codewriter.WritePush((parsedLine))
-
 			}
 
 			if parsedLine.CommandType == parser.POP_COMMAND {
 				code = codewriter.WritePop((parsedLine))
 			}
 
+			if parsedLine.CommandType == parser.ARIT_COMMAND {
+				code = codewriter.WriteArithmetic((parsedLine))
+			}
+
 			newFile.WriteString(code)
-			fmt.Println(parsedLine)
+			// fmt.Println(parsedLine)
 		}
 	}
 

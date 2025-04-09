@@ -29,6 +29,7 @@ func ParseLine(line string) (command Command, isValid bool) {
 	}
 
 	commandType := getCommandType(line)
+
 	finalLine := Command{
 		CommandType: commandType,
 		Arg1:        getArg1(line),
@@ -59,7 +60,11 @@ func getCommandType(line string) CommandType {
 
 func getArg1(line string) string {
 	substrings := strings.Split(line, " ")
-	return substrings[1]
+	if len(substrings) > 1 {
+		return substrings[1]
+	}
+	// arithmentic commands
+	return line
 }
 
 func getArg2(line string) (int, error) {
