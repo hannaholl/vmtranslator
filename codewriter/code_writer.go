@@ -27,11 +27,23 @@ func WriteArithmetic(command parser.Command) string {
 }
 
 func WritePop(command parser.Command, staticFileName string) string {
-	segmentName := segmentMap[command.Arg1]
 
 	var assemblyCode AssemblyCode = ""
 
 	switch command.Arg1 {
+	case "pointer":
+		assemblyCode.WriteLine("// decrement stack and point to value to pop")
+		assemblyCode.WriteLine("@SP")
+		assemblyCode.WriteLine("AM=M-1")
+		assemblyCode.WriteLine("// the value from the stack")
+		assemblyCode.WriteLine("D=M")
+
+		if command.Arg2 == 0 {
+			assemblyCode.WriteLine("@THIS")
+		} else {
+			assemblyCode.WriteLine("@THAT")
+		}
+		assemblyCode.WriteLine("M=D")
 	case "static":
 		varName := staticFileName + "." + strconv.Itoa(command.Arg2)
 
@@ -58,6 +70,8 @@ func WritePop(command parser.Command, staticFileName string) string {
 		assemblyCode.WriteLine("@" + tempLocation)
 		assemblyCode.WriteLine("M=D")
 	default:
+		segmentName := segmentMap[command.Arg1]
+
 		assemblyCode.WriteLine("// update segment to the new address")
 		assemblyCode.WriteAValue(command.Arg2)
 		assemblyCode.WriteLine("D=A")
@@ -97,6 +111,13 @@ func WritePush(command parser.Command, staticFileName string) string {
 
 	// Could write directly to the file instead of a variable?
 	switch command.Arg1 {
+	case "pointer":
+		if command.Arg2 == 0 {
+			assemblyCode.WriteLine("@THIS")
+		} else {
+			assemblyCode.WriteLine("@THAT")
+		}
+		assemblyCode.WriteLine("D=M")
 	case "static":
 		varName := staticFileName + "." + strconv.Itoa(command.Arg2)
 
