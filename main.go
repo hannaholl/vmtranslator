@@ -48,15 +48,15 @@ func main() {
 
 			code := ""
 			if parsedLine.CommandType == parser.PUSH_COMMAND {
-				code = codewriter.WritePush((parsedLine))
+				code = codewriter.WritePush(parsedLine, newFileName)
 			}
 
 			if parsedLine.CommandType == parser.POP_COMMAND {
-				code = codewriter.WritePop((parsedLine))
+				code = codewriter.WritePop(parsedLine, newFileName)
 			}
 
 			if parsedLine.CommandType == parser.ARIT_COMMAND {
-				code = codewriter.WriteArithmetic((parsedLine))
+				code = codewriter.WriteArithmetic(parsedLine)
 			}
 
 			newFile.WriteString(code)
