@@ -1,8 +1,35 @@
 
+@256
+D=A
+@SP
+M=D
+
+@300
+D=A
+@LCL
+M=D
+
+@400
+D=A
+@ARG
+M=D
+
+@3000
+D=A
+@THIS
+M=D
+
+@3010
+D=A
+@THAT
+M=D
+
 // VM line: push constant 10
 @10
 D=A
 @SP
+AM = M+1
+
 A=M
 M=D
 @SP
@@ -26,7 +53,7 @@ M=D
 // decrement SP
 @SP
 M=M-1
-// reset segment back to initial value
+// reset segment
 @LCL
 D=M
 @0
@@ -70,7 +97,7 @@ M=D
 // decrement SP
 @SP
 M=M-1
-// reset segment back to initial value
+// reset segment
 @ARG
 D=M
 @2
@@ -96,7 +123,7 @@ M=D
 // decrement SP
 @SP
 M=M-1
-// reset segment back to initial value
+// reset segment
 @ARG
 D=M
 @1
@@ -117,7 +144,7 @@ M=M+1
 // update segment to the new address
 @6
 D=A
-@THIS
+@LCL
 M=D+M
 // point A to the location pop from
 @SP
@@ -125,18 +152,18 @@ A=M-1
 // the value from the stack
 D=M
 // write value to current segment
-@THIS
+@LCL
 A=M
 M=D
 // decrement SP
 @SP
 M=M-1
-// reset segment back to initial value
-@THIS
+// reset segment
+@LCL
 D=M
 @6
 D=D-A
-@THIS
+@LCL
 M=D
 
 // VM line: push constant 42
@@ -161,7 +188,7 @@ M=M+1
 // update segment to the new address
 @5
 D=A
-@THAT
+@LCL
 M=D+M
 // point A to the location pop from
 @SP
@@ -169,25 +196,25 @@ A=M-1
 // the value from the stack
 D=M
 // write value to current segment
-@THAT
+@LCL
 A=M
 M=D
 // decrement SP
 @SP
 M=M-1
-// reset segment back to initial value
-@THAT
+// reset segment
+@LCL
 D=M
 @5
 D=D-A
-@THAT
+@LCL
 M=D
 
 // VM line: pop that 2
 // update segment to the new address
 @2
 D=A
-@THAT
+@LCL
 M=D+M
 // point A to the location pop from
 @SP
@@ -195,18 +222,18 @@ A=M-1
 // the value from the stack
 D=M
 // write value to current segment
-@THAT
+@LCL
 A=M
 M=D
 // decrement SP
 @SP
 M=M-1
-// reset segment back to initial value
-@THAT
+// reset segment
+@LCL
 D=M
 @2
 D=D-A
-@THAT
+@LCL
 M=D
 
 // VM line: push constant 510
@@ -219,12 +246,29 @@ M=D
 M=M+1
 
 // VM line: pop temp 6
-// decrement stack and point to value to pop
+// update segment to the new address
+@6
+D=A
+@LCL
+M=D+M
+// point A to the location pop from
 @SP
-AM=M-1
+A=M-1
 // the value from the stack
 D=M
-@11
+// write value to current segment
+@LCL
+A=M
+M=D
+// decrement SP
+@SP
+M=M-1
+// reset segment
+@LCL
+D=M
+@6
+D=D-A
+@LCL
 M=D
 
 // VM line: push local 0
@@ -240,11 +284,6 @@ M=D
 M=M+1
 
 // VM line: push that 5
-@THAT
-D=M
-@5
-A=D+A
-D=M
 @SP
 A=M
 M=D
@@ -252,18 +291,68 @@ M=D
 M=M+1
 
 // VM line: add
-@SP
-AM=M-1
-D=M
-A=A-1
-M=D+M
 
-// VM line: push argument 1
+// update segment to the new address
+@0
+D=A
+@ARG
+M=D+M
+// point A to the location pop from
+@SP
+A=M-1
+// the value from the stack
+D=M
+// write value to current segment
+@ARG
+A=M
+M=D
+// decrement SP
+@SP
+M=M-1
+// reset segment
+@ARG
+D=M
+@0
+D=D-A
+@ARG
+M=D
+
+
+// update segment to the new address
+@1
+D=A
+@ARG
+M=D+M
+// point A to the location pop from
+@SP
+A=M-1
+// the value from the stack
+D=M
+// write value to current segment
+@ARG
+A=M
+M=D
+// decrement SP
+@SP
+M=M-1
+// reset segment
 @ARG
 D=M
 @1
-A=D+A
-D=M
+D=D-A
+@ARG
+M=D
+
+
+@15
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+// VM line: push argument 1
 @SP
 A=M
 M=D
@@ -271,18 +360,7 @@ M=D
 M=M+1
 
 // VM line: sub
-@SP
-AM=M-1
-D=M
-A=A-1
-M=M-D
-
 // VM line: push this 6
-@THIS
-D=M
-@6
-A=D+A
-D=M
 @SP
 A=M
 M=D
@@ -290,11 +368,6 @@ M=D
 M=M+1
 
 // VM line: push this 6
-@THIS
-D=M
-@6
-A=D+A
-D=M
 @SP
 A=M
 M=D
@@ -302,22 +375,69 @@ M=D
 M=M+1
 
 // VM line: add
-@SP
-AM=M-1
-D=M
-A=A-1
+
+// update segment to the new address
+@0
+D=A
+@ARG
 M=D+M
+// point A to the location pop from
+@SP
+A=M-1
+// the value from the stack
+D=M
+// write value to current segment
+@ARG
+A=M
+M=D
+// decrement SP
+@SP
+M=M-1
+// reset segment
+@ARG
+D=M
+@0
+D=D-A
+@ARG
+M=D
+
+
+// update segment to the new address
+@1
+D=A
+@ARG
+M=D+M
+// point A to the location pop from
+@SP
+A=M-1
+// the value from the stack
+D=M
+// write value to current segment
+@ARG
+A=M
+M=D
+// decrement SP
+@SP
+M=M-1
+// reset segment
+@ARG
+D=M
+@1
+D=D-A
+@ARG
+M=D
+
+
+@15
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
 
 // VM line: sub
-@SP
-AM=M-1
-D=M
-A=A-1
-M=M-D
-
 // VM line: push temp 6
-@11
-D=M
 @SP
 A=M
 M=D
@@ -325,11 +445,66 @@ M=D
 M=M+1
 
 // VM line: add
-@SP
-AM=M-1
-D=M
-A=A-1
+
+// update segment to the new address
+@0
+D=A
+@ARG
 M=D+M
+// point A to the location pop from
+@SP
+A=M-1
+// the value from the stack
+D=M
+// write value to current segment
+@ARG
+A=M
+M=D
+// decrement SP
+@SP
+M=M-1
+// reset segment
+@ARG
+D=M
+@0
+D=D-A
+@ARG
+M=D
+
+
+// update segment to the new address
+@1
+D=A
+@ARG
+M=D+M
+// point A to the location pop from
+@SP
+A=M-1
+// the value from the stack
+D=M
+// write value to current segment
+@ARG
+A=M
+M=D
+// decrement SP
+@SP
+M=M-1
+// reset segment
+@ARG
+D=M
+@1
+D=D-A
+@ARG
+M=D
+
+
+@15
+D=A
+@SP
+A=M
+M=D
+@SP
+M=M+1
 
 (END)
 @END
