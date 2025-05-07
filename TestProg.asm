@@ -24,8 +24,8 @@ D=A
 @THAT
 M=D
 
-// VM line: push constant 111
-@111
+// VM line: push constant 24
+@24
 D=A
 @SP
 A=M
@@ -33,8 +33,8 @@ M=D
 @SP
 M=M+1
 
-// VM line: push constant 111
-@111
+// VM line: push constant 82
+@82
 D=A
 @SP
 A=M
@@ -42,24 +42,10 @@ M=D
 @SP
 M=M+1
 
-// VM line: eq
+// VM line: not
 @SP
 AM=M-1
-D=M
-A=A-1
-D=D-M
-@EQ_TRUE_9
-D;JEQ
-@SP
-A=M-1
-M=0
-@EQ_END_9
-0;JEQ
-(EQ_TRUE_9)
-@SP
-A=M-1
-M=1
-(EQ_END_9)
+M=!M
 
 (END)
 @END

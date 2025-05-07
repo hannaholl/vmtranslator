@@ -14,27 +14,27 @@ func WriteArithmetic(command parser.Command, lineNumber int) string {
 
 	switch command.Arg1 {
 	case "add":
-		assemblyCode.WriteLine("AM=M-1") // point to first operand an update SP
-		assemblyCode.WriteLine("D=M")    // D is the first operand
-		assemblyCode.WriteLine("A=A-1")  // Move to previous location in stack
-		assemblyCode.WriteLine("M=D+M")  // Write computed value to stack
+		assemblyCode.WriteLine("AM=M-1") // point to top operand an decrement SP
+		assemblyCode.WriteLine("D=M")    // D = y
+		assemblyCode.WriteLine("A=A-1")  // Decrement SP and move to next operand
+		assemblyCode.WriteLine("M=D+M")  // Write computed value to stack (y + x)
 	case "sub":
-		assemblyCode.WriteLine("AM=M-1") // point to first operand an update SP
-		assemblyCode.WriteLine("D=M")    // D is the first operand
-		assemblyCode.WriteLine("A=A-1")  // Move to previous location in stack
-		assemblyCode.WriteLine("M=M-D")  // Write computed value to stack
+		assemblyCode.WriteLine("AM=M-1") // point to top operand an decrement SP
+		assemblyCode.WriteLine("D=M")    // D = y
+		assemblyCode.WriteLine("A=A-1")  // Decrement SP and move to next operand
+		assemblyCode.WriteLine("M=M-D")  // Write computed value to stack (x + y)
 	case "neg":
-		assemblyCode.WriteLine("A=M-1") // point to operand, don't change SP
+		assemblyCode.WriteLine("A=M-1") // point to operand, don't deprecate SP
 		assemblyCode.WriteLine("M=-M")  // negate the value
 	case "eq":
-		assemblyCode.WriteLine("AM=M-1") // point to first operand an update SP
-		assemblyCode.WriteLine("D=M")    // D is the first operand
-		assemblyCode.WriteLine("A=A-1")  // Move to previous location in stack
-		assemblyCode.WriteLine("D=D-M")
-
 		lineId := strconv.Itoa(lineNumber)
 		trueLabel := "EQ_TRUE_" + lineId
 		endLabel := "EQ_END_" + lineId
+
+		assemblyCode.WriteLine("AM=M-1") // point to top operand an decrement SP
+		assemblyCode.WriteLine("D=M")    // D = y
+		assemblyCode.WriteLine("A=A-1")  // Decrement SP and move to next operand
+		assemblyCode.WriteLine("D=M-D")  // x - y
 
 		// if D==0, jump to equal true
 		assemblyCode.WriteLine("@" + trueLabel)
@@ -55,6 +55,77 @@ func WriteArithmetic(command parser.Command, lineNumber int) string {
 		assemblyCode.WriteLine("M=1")
 
 		assemblyCode.WriteLine("(" + endLabel + ")")
+	case "gt":
+		lineId := strconv.Itoa(lineNumber)
+		trueLabel := "GT_TRUE_" + lineId
+		endLabel := "GT_END_" + lineId
+
+		assemblyCode.WriteLine("AM=M-1") // point to top operand an decrement SP
+		assemblyCode.WriteLine("D=M")    // D = y
+		assemblyCode.WriteLine("A=A-1")  // Decrement SP and move to next operand
+		assemblyCode.WriteLine("D=M-D")  // x - y
+
+		// if D>0, jump to equal true
+		assemblyCode.WriteLine("@" + trueLabel)
+		assemblyCode.WriteLine("D;JGT")
+
+		// // if not jumping, write false
+		assemblyCode.WriteLine("@SP")
+		assemblyCode.WriteLine("A=M-1")
+		assemblyCode.WriteLine("M=0")
+
+		// go to end
+		assemblyCode.WriteLine("@" + endLabel)
+		assemblyCode.WriteLine("0;JEQ")
+
+		assemblyCode.WriteLine("(" + trueLabel + ")")
+		assemblyCode.WriteLine("@SP")
+		assemblyCode.WriteLine("A=M-1")
+		assemblyCode.WriteLine("M=1")
+
+		assemblyCode.WriteLine("(" + endLabel + ")")
+	case "lt":
+		lineId := strconv.Itoa(lineNumber)
+		trueLabel := "LT_TRUE_" + lineId
+		endLabel := "LT_END_" + lineId
+
+		assemblyCode.WriteLine("AM=M-1") // point to top operand an decrement SP
+		assemblyCode.WriteLine("D=M")    // D = y
+		assemblyCode.WriteLine("A=A-1")  // Decrement SP and move to next operand
+		assemblyCode.WriteLine("D=M-D")  // x - y
+
+		// if D>0, jump to equal true
+		assemblyCode.WriteLine("@" + trueLabel)
+		assemblyCode.WriteLine("D;JLT")
+
+		// // if not jumping, write false
+		assemblyCode.WriteLine("@SP")
+		assemblyCode.WriteLine("A=M-1")
+		assemblyCode.WriteLine("M=0")
+
+		// go to end
+		assemblyCode.WriteLine("@" + endLabel)
+		assemblyCode.WriteLine("0;JEQ")
+
+		assemblyCode.WriteLine("(" + trueLabel + ")")
+		assemblyCode.WriteLine("@SP")
+		assemblyCode.WriteLine("A=M-1")
+		assemblyCode.WriteLine("M=1")
+
+		assemblyCode.WriteLine("(" + endLabel + ")")
+	case "and":
+		assemblyCode.WriteLine("AM=M-1") // point to top operand an decrement SP
+		assemblyCode.WriteLine("D=M")    // D = y
+		assemblyCode.WriteLine("A=A-1")  // Decrement SP and move to next operand
+		assemblyCode.WriteLine("M=D&M")  // y & x
+	case "or":
+		assemblyCode.WriteLine("AM=M-1") // point to top operand an decrement SP
+		assemblyCode.WriteLine("D=M")    // D = y
+		assemblyCode.WriteLine("A=A-1")  // Decrement SP and move to next operand
+		assemblyCode.WriteLine("M=D|M")  // y || x
+	case "not":
+		assemblyCode.WriteLine("A=M-1") // point to operand, don't deprecate SP
+		assemblyCode.WriteLine("M=!M")  // !y
 	}
 
 	return string(assemblyCode) + "\n"
