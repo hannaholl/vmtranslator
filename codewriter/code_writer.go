@@ -7,7 +7,7 @@ import (
 
 type AssemblyCode string
 
-func WriteArithmetic(command parser.Command) string {
+func WriteArithmetic(command parser.Command, lineNumber int) string {
 	var assemblyCode AssemblyCode = ""
 
 	assemblyCode.WriteLine("@SP")
@@ -27,27 +27,34 @@ func WriteArithmetic(command parser.Command) string {
 		assemblyCode.WriteLine("A=M-1") // point to operand, don't change SP
 		assemblyCode.WriteLine("M=-M")  // negate the value
 	case "eq":
-
 		assemblyCode.WriteLine("AM=M-1") // point to first operand an update SP
 		assemblyCode.WriteLine("D=M")    // D is the first operand
 		assemblyCode.WriteLine("A=A-1")  // Move to previous location in stack
 		assemblyCode.WriteLine("D=D-M")
 
-		// TODO
+		lineId := strconv.Itoa(lineNumber)
+		trueLabel := "EQ_TRUE_" + lineId
+		endLabel := "EQ_END_" + lineId
 
 		// if D==0, jump to equal true
-		// assemblyCode.WriteLine("@EQ_TRUE")
-		// assemblyCode.WriteLine("D;JEQ")
+		assemblyCode.WriteLine("@" + trueLabel)
+		assemblyCode.WriteLine("D;JEQ")
 
 		// // if not jumping, write false
-		// assemblyCode.WriteLine("@SP")
-		// assemblyCode.WriteLine("@A=M-1")
-		// assemblyCode.WriteLine("M=0")
+		assemblyCode.WriteLine("@SP")
+		assemblyCode.WriteLine("A=M-1")
+		assemblyCode.WriteLine("M=0")
 
-		// assemblyCode.WriteLine("(EQ_TRUE)")
-		// assemblyCode.WriteLine("@SP")
-		// assemblyCode.WriteLine("@A=M-1")
-		// assemblyCode.WriteLine("M=1")
+		// go to end
+		assemblyCode.WriteLine("@" + endLabel)
+		assemblyCode.WriteLine("0;JEQ")
+
+		assemblyCode.WriteLine("(" + trueLabel + ")")
+		assemblyCode.WriteLine("@SP")
+		assemblyCode.WriteLine("A=M-1")
+		assemblyCode.WriteLine("M=1")
+
+		assemblyCode.WriteLine("(" + endLabel + ")")
 	}
 
 	return string(assemblyCode) + "\n"

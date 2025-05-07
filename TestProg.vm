@@ -4,9 +4,6 @@
 // set this 3000,     // base address of the this segment
 // set that 3010,     // base address of the that segment
 
-push constant 333
 push constant 111
-sub
-
-push constant 444
-add
+push constant 111
+eq
