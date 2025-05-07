@@ -29,8 +29,8 @@ func main() {
 	defer newFile.Close()
 
 	// Init symbols
-	// These are initialised by a test script in the cpu emulator and
-	// won't be needed in future chapters
+	// These are initialised by a test script in the cpu emulator. Need to
+	// define them here to run in the emulator without a test script.
 	newFile.WriteString(codewriter.WriteVariable("SP", 256))
 	newFile.WriteString(codewriter.WriteVariable("LCL", 300))
 	newFile.WriteString(codewriter.WriteVariable("ARG", 400))
