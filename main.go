@@ -38,6 +38,7 @@ func main() {
 	newFile.WriteString(codewriter.WriteVariable("THAT", 3010))
 
 	scanner := bufio.NewScanner(file)
+	count := 1
 
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -56,12 +57,14 @@ func main() {
 			}
 
 			if parsedLine.CommandType == parser.ARIT_COMMAND {
-				code = codewriter.WriteArithmetic(parsedLine)
+				code = codewriter.WriteArithmetic(parsedLine, count)
 			}
 
 			newFile.WriteString(code)
 			// fmt.Println(parsedLine)
 		}
+
+		count++
 	}
 
 	// End with intifite loop
