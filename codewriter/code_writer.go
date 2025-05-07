@@ -5,6 +5,8 @@ import (
 	"strconv"
 )
 
+// /// I can see what you did here, but I would define AssemblyCode as a struct
+// /// containing a strings.Builder.
 type AssemblyCode string
 
 func WriteArithmetic(command parser.Command, lineNumber int) string {
@@ -49,6 +51,7 @@ func WriteArithmetic(command parser.Command, lineNumber int) string {
 		assemblyCode.WriteLine("@" + endLabel)
 		assemblyCode.WriteLine("0;JEQ")
 
+		/// Extracting a helper for declaring a label (wrapped in brackets) would be nice.
 		assemblyCode.WriteLine("(" + trueLabel + ")")
 		assemblyCode.WriteLine("@SP")
 		assemblyCode.WriteLine("A=M-1")

@@ -5,10 +5,10 @@ import (
 	"strings"
 )
 
-type CommandType int
+type CommandType int /// With only three variants this could be a uint8
 
 const (
-	ARIT_COMMAND CommandType = 0
+	ARIT_COMMAND CommandType = 0 /// You could use iota here
 	PUSH_COMMAND CommandType = 1
 	POP_COMMAND  CommandType = 2
 )
@@ -29,6 +29,9 @@ func ParseLine(line string) (command Command, isValid bool) {
 	}
 
 	commandType := getCommandType(line)
+
+	/// Here I would see if you could parse all args, irrespective of what command you're dealing with.
+	/// Then if you get back two args instead of one, and it's an arithmetic command, you can return an error.
 
 	finalLine := Command{
 		CommandType: commandType,
@@ -59,6 +62,7 @@ func getCommandType(line string) CommandType {
 }
 
 func getArg1(line string) string {
+	/// I think strings.Fields is what you want here (and below)
 	substrings := strings.Split(line, " ")
 	if len(substrings) > 1 {
 		return substrings[1]
